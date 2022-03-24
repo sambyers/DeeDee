@@ -2,4 +2,4 @@ access_token
 __pycache__
 .pytest_cache
 *.pyc
-__pycache__/app.cpython-310.pyc
+.tox
