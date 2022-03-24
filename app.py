@@ -20,21 +20,27 @@ class Lab():
         pass
 
 class Bot():
-    def __init__(self, name: str, lab_url: str, msg: str) -> None:
+    def __init__(self, name: str, lab: Lab, msg: str) -> None:
         self.name = name
         self.msg = msg
         self._cmd = self._parse(msg)
-        self._lab = Lab(lab_url)
+        self._lab = lab
+        self._supported_cmds = ['help', 'status', 'reset']
 
     def respond(self) -> str:
-        if self.cmd == 'help':
-            return self._help
-        elif self.cmd == 'status':
-            return self._lab.get()
-        elif self.cmd == 'reset':
-            return self._lab.reset()
+        if self._validate_cmd():
+            if self._cmd == 'help':
+                return self._help()
+            elif self._cmd == 'status':
+                return self._lab.get()
+            elif self._cmd == 'reset':
+                return self._lab.reset()
         else:
             return self._not_implemented()
+    
+    def _validate_cmd(self) -> bool:
+        if self.cmd in self._supported_cmds:
+            return True
 
     def _help(self) -> str:
         return f"Hi! I'm {self.name} bot. Supported commands: /status /reset"
@@ -67,8 +73,10 @@ def lambda_handler(event, context):
         me = wbxapi.people.me()
         # Don't respond to messages from ourselves
         if not message.personId == me.id:
+            # New lab object
+            lab = Lab(lab_url)
             # New bot object
-            bot = Bot(bot_name, lab_url, message.text)
+            bot = Bot(bot_name, lab, message.text)
             # Ask bot to respond based on message via webhook
             bot_resp = bot.respond()
             wbxapi.messages.create(room.id, text=bot_resp)
