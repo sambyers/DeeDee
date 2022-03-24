@@ -1,4 +1,5 @@
 import os
+import json
 from webexteamssdk import WebexTeamsAPI, Webhook
 
 
@@ -7,12 +8,12 @@ class Lab():
         self.base_url = url
 
     def get(self) -> str:
-        pass
+        return 'Lab info: BLAH'
         # return self._get(f'{self.base_url}/status')
         # Returns json, e.g. {'state': 'configured', 'data': {'misc': 'Other data from running CPOC?', 'DNAC': 'blah', 'ISE': 'blah'}} OR {'state': 'default'}
 
-    def reset(self) -> bool:
-        pass
+    def reset(self) -> dict:
+        return json.dumps({ 'state': 'default' })
         # json = {'state': 'default'}
         # return self.put(f'{self.base_url}/lab', json)
     
@@ -22,38 +23,58 @@ class Lab():
 class Bot():
     def __init__(self, name: str, lab: Lab, msg: str) -> None:
         self.name = name
+        self._valid_cmds = ['help', 'status', 'reset']
         self.msg = msg
-        self._cmd = self._parse(msg)
-        self._lab = lab
-        self._supported_cmds = ['help', 'status', 'reset']
+        self.lab = lab
 
-    def respond(self) -> str:
-        if self._validate_cmd():
-            if self._cmd == 'help':
-                return self._help()
-            elif self._cmd == 'status':
-                return self._lab.get()
-            elif self._cmd == 'reset':
-                return self._lab.reset()
-        else:
-            return self._not_implemented()
+    @property
+    def msg(self) -> str:
+        return self._msg
+
+    @msg.setter
+    def msg(self, msg: str):
+        # Transform message into command and validate when msg is set
+        self.cmd = self._to_cmd(msg)
+        self._msg = msg
     
-    def _validate_cmd(self) -> bool:
-        if self.cmd in self._supported_cmds:
-            return True
+    def _to_cmd(self, msg: str) -> str:
+        cmd = self._parse_cmd(msg)
+        self._validate_cmd(cmd)
+        return cmd
+
+    def _validate_cmd(self, cmd: str) -> bool:
+        if cmd in self._valid_cmds:
+            valid_cmd = True
+        else:
+            valid_cmd = False
+        self._valid_cmd = valid_cmd
+        return valid_cmd
 
     def _help(self) -> str:
         return f"Hi! I'm {self.name} bot. Supported commands: /status /reset"
 
     def _not_implemented(self) -> str:
-        return "Sorry. I don't understand your request."
+        return "Command not implemented."
     
-    def _parse(self, msg: str) -> str:
+    def _parse_cmd(self, msg: str) -> str:
         msg_list = msg.split(' ')
         for word in msg_list:
             if '/' in word:
                 cmd = word.strip('/')
         return cmd
+
+    def respond(self) -> str:
+        # Check if command is valid
+        if self._valid_cmd:
+            # Respond to supported commands
+            if self.cmd == 'help':
+                return self._help()
+            elif self.cmd == 'status':
+                return self.lab.get()
+            elif self.cmd == 'reset':
+                return self.lab.reset()
+        else:
+            return self._not_implemented()
 
 
 def lambda_handler(event, context):
