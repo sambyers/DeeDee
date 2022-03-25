@@ -17,18 +17,3 @@ black = "^22.1.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.tox]
-legacy_tox_ini = """
-[tox]
-skipsdist = true
-envlist = py310
-
-[testenv]
-whitelist_externals = poetry
-commands =
-    poetry install -v
-    poetry run black .
-    poetry run flake8 --max-line-length 88
-    poetry run pytest
-"""
