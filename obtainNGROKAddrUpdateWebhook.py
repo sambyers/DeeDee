@@ -1,4 +1,5 @@
 import requests
+from requests.exceptions import HTTPError
 
 
 def get_ngrok_hostname():
@@ -8,8 +9,8 @@ def get_ngrok_hostname():
         url_new_https = response.json()["tunnels"][0]["public_url"]
         print(url_new_https)
         return url_new_https
-    except:
-        print(response.status_code)
+    except HTTPError as e:
+        print(e.response.status_code)
         return None
 
 
