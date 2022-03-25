@@ -17,7 +17,10 @@ def test_bot(lab):
 
 
 def test_bot_help(test_bot):
-    assert test_bot.respond() == "Hi! I'm Test bot. Supported commands: /status /reset"
+    test_bot.msg = "@bot /help"
+    assert (
+        test_bot.respond() == "Hi! I am Test bot. Supported commands: help status reset"
+    )
 
 
 def test_bot_not_implemented(test_bot):

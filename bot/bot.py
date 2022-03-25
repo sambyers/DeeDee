@@ -1,10 +1,20 @@
 import os
 import json
+import logging
 from webexteamssdk import WebexTeamsAPI, Webhook
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(name)s.%(funcName)s"
+    " +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s",
+)
+logger = logging.getLogger()
 
 
 class Lab:
     def __init__(self, url) -> None:
+        logger.debug("Create Lab object.")
         self.base_url = url
 
     def get(self) -> str:
@@ -25,8 +35,10 @@ class Lab:
 
 class Bot:
     def __init__(self, name: str, lab: Lab, msg: str) -> None:
+        logger.debug("Create Bot object.")
         self.name = name
         self._valid_cmds = ["help", "status", "reset"]
+        self.cmd = None
         self.msg = msg
         self.lab = lab
 
@@ -54,7 +66,8 @@ class Bot:
         return valid_cmd
 
     def _help(self) -> str:
-        return f"Hi! I'm {self.name} bot. Supported commands: /status /reset"
+        valid_cmds = " ".join(self._valid_cmds)
+        return f"Hi! I am {self.name} bot. Supported commands: {valid_cmds}"
 
     def _not_implemented(self) -> str:
         return "Command not implemented."
@@ -62,6 +75,7 @@ class Bot:
     def _parse_cmd(self, msg: str) -> str:
         msg_list = msg.split(" ")
         for word in msg_list:
+            cmd = word
             if "/" in word:
                 cmd = word.strip("/")
         return cmd
