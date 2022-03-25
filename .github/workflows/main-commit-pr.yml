@@ -1,5 +1,5 @@
 ---
-name: CI
+name: DeeDee Bot CI
 
 on:
   push:
