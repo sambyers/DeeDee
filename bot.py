@@ -13,6 +13,7 @@ class Lab:
         # Returns json, e.g. {'state': 'configured', 'data':
         # {'misc': 'Other data from running CPOC?', 'DNAC': 'blah', 'ISE': 'blah'}}
         # OR {'state': 'default'}
+
     def reset(self) -> dict:
         return json.dumps({"state": "default"})
         # json = {'state': 'default'}

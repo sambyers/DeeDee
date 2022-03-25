@@ -28,8 +28,7 @@ envlist = py310
 whitelist_externals = poetry
 commands =
     poetry install -v
-    poetry run black app.py
-    poetry run black test_app.py
+    poetry run black .
     poetry run flake8 --max-line-length 88
     poetry run pytest
 """

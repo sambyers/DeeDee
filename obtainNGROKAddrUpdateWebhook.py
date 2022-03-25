@@ -1,4 +1,6 @@
 import requests
+
+
 def get_ngrok_hostname():
     url = "http://127.0.0.1:4040/api/tunnels"
     try:
@@ -9,7 +11,7 @@ def get_ngrok_hostname():
     except:
         print(response.status_code)
         return None
-    
+
 
 def update_webex_webhook(ngrokAddr):
     url = "https://webexapis.com/v1/webhooks/{webhookId}"
@@ -18,10 +20,10 @@ def update_webex_webhook(ngrokAddr):
         "targetUrl": ngrokAddr,
         "secret": "SECRET",
         "ownedBy": "org",
-        "status": "active"
-        }
+        "status": "active",
+    }
     response = requests.put(url, data)
     print(response.status_code)
-    
+
 
 update_webex_webhook(get_ngrok_hostname())
