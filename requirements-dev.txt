@@ -170,6 +170,6 @@ virtualenv==20.13.4; python_version >= "2.7" and python_full_version < "3.0.0" o
 webexteamssdk==1.6 \
     --hash=sha256:e4958dca3903c659fe1e0f79e38740cb2ec1ae2589599807b179c3efb356c3a2 \
     --hash=sha256:980f268d89187d1a157dfbadcb626fce849080a31550e549cfe838f0203b3a3d
-werkzeug==2.0.3; python_version >= "3.6" \
-    --hash=sha256:1421ebfc7648a39a5c58c601b154165d05cf47a3cd0ccb70857cbdacf6c8f2b8 \
-    --hash=sha256:b863f8ff057c522164b6067c9e28b041161b4be5ba4d0daceeaa50a163822d3c
+werkzeug==2.2.3; python_version >= "3.6" \
+    --hash=sha256:2e1ccc9417d4da358b9de6f174e3ac094391ea1d4fbef2d667865d819dfd0afe \
+    --hash=sha256:56433961bc1f12533306c624f3be5e744389ac61d722175d543e1751285da612
